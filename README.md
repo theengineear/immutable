@@ -7,6 +7,10 @@ It allows you to instantiate via a `tuple` or via `kwargs`. It simplifies the
 case where you know ahead of time what the values of an `Immutable` should be
 and you just need to instantiate it once.
 
+## Install
+
+`pip install immutable`
+
 ## Details
 
 ### `namedtuple`
