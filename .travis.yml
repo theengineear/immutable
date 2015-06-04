@@ -6,3 +6,6 @@ python:
   - "3.3"
   - "3.4"
   - "nightly"
+
+script:
+  - nosetests
