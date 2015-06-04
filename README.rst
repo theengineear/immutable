@@ -26,7 +26,7 @@ instantiate an object as follows:
 
     from collections import namedtuple
 
-    TupleFactory = namedtuple('ATuple', ['using', 'these', 'props'])
+    TupleFactory = namedtuple('ATuple', ['using', 'these', 'attrs'])
     ATuple = TupleFactory('first', these='second', attrs='third')
     ATuple  # ATuple(using='first', these='second', attrs='third')
 
