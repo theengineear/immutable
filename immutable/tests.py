@@ -1,8 +1,11 @@
 from __future__ import absolute_import, unicode_literals
 
+import warnings
 from unittest import TestCase
 
 from immutable import Immutable, ImmutableFactory
+
+warnings.filterwarnings("ignore")
 
 
 class TestImmutableObjectFactory(TestCase):
