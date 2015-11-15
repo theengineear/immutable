@@ -151,7 +151,7 @@ class TestImmutable(TestCase):
         self.assertEqual(dict_instantiation.okie, 'dokie')
 
         both_instantiation = Immutable(('blah', 10), **{'okie': 'dokie'})
-        self.assertEqual(both_instantiation.items(),
+        self.assertEqual(list(both_instantiation.items()),
                          [('blah', 10), ('okie', 'dokie')])
 
     def test_keys(self):
@@ -162,7 +162,7 @@ class TestImmutable(TestCase):
                          {'black', 'white', 'red', 'blue'})
 
         # if given as a tuple, they should keep the given order
-        self.assertEqual(self.ordered_immutable.keys(),
+        self.assertEqual(list(self.ordered_immutable.keys()),
                          ['zero', 'one', 'two', 'three'])
 
     def test_values(self):
@@ -173,7 +173,7 @@ class TestImmutable(TestCase):
                          {'black', 'white', 'red', 'blue'})
 
         # if given as a tuple, they should keep the given order
-        self.assertEqual(self.ordered_immutable.values(), [0, 1, 2, 3])
+        self.assertEqual(list(self.ordered_immutable.values()), [0, 1, 2, 3])
 
     def test_items(self):
 
@@ -184,7 +184,7 @@ class TestImmutable(TestCase):
                           ('red', 'red'), ('blue', 'blue')})
 
         # if given as a tuple, they should keep the given order
-        self.assertEqual(self.ordered_immutable.items(),
+        self.assertEqual(list(self.ordered_immutable.items()),
                          [('zero', 0), ('one', 1), ('two', 2), ('three', 3)])
 
     def test_index(self):
