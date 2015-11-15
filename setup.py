@@ -6,7 +6,7 @@ def readme():
 
 setup(name='immutable',
       packages=find_packages(),
-      version='0.0.1',
+      version='0.0.2',
       use_2to3=True,
       author='Andrew Seier',
       author_email='andseier@gmail.com',

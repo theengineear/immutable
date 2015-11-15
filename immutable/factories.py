@@ -4,7 +4,15 @@ Factories for creating `Immutable` objects.
 """
 from __future__ import absolute_import, unicode_literals
 
+import warnings
 from collections import namedtuple
+
+
+def warning_on_one_line(message, category, filename, lineno,
+                        file=None, line=None):
+    return '{}:{}: {}:\n\n{}\n\n'.format(filename, lineno, category.__name__,
+                                         message)
+warnings.formatwarning = warning_on_one_line
 
 
 class ImmutableFactory(object):
@@ -43,6 +51,8 @@ class ImmutableFactory(object):
         :return: (namedtuple) An instance of type Immutable.
 
         """
+        warnings.warn('Deprecated: Use `from immutable import Immutable`. '
+                      'Backwards incompatible changes exist. See CHANGELOG.md')
         attributes += tuple((k, v) for k, v in kwargs.items())
         keys_tup = tuple(e[0] for e in attributes)
         values_tup = tuple(e[1] for e in attributes)
