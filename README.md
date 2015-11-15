@@ -1,11 +1,17 @@
 # The Immutable Package
 
-This package is an *exceedingly* simple wrapper around the builtin `namedtuple`
-from the `collections` package.
+This package presents access to an `Immutable` object which adheres to the
+Python Mapping and Sequence APIs. That is, function calls like `.items()`,
+`.count()`, `.index()`, `.keys()`, etc will work.
 
 It allows you to instantiate via a `tuple` or via `kwargs`. It simplifies the
 case where you know ahead of time what the values of an `Immutable` should be
 and you just need to instantiate it once.
+
+It also allows for nested objects and Immutable object comparisons. It should
+be noted that you *can* change these objects by accessing the `.__dict__` attr,
+accessing the `self.__dict__['_ordered_dict']` object. The idea is that there
+are enough red flags at that point to steer anyone away.
 
 ## Install
 
@@ -13,103 +19,43 @@ and you just need to instantiate it once.
 
 ## Details
 
-### `namedtuple`
+### `Immutable`
 
-The `namedtuple` is a Python `builtin` that allows you to instantiate an object
-as follows:
+This is the main class in the package. You can use it like this:
 
-```python
-from collections import namedtuple
-
-TupleFactory = namedtuple('ATuple', ['using', 'these', 'attrs'])
-ATuple = TupleFactory('first', these='second', attrs='third')
-ATuple  # ATuple(using='first', these='second', attrs='third')
-
-# dot-access attributes
-ATuple.using  # 'first'
-Atuple.these  # 'second'
-ATuple.attrs  # 'third'
-
-# index-access attributes
-ATuple[0]  # 'first'
-ATuple[1]  # 'second'
-ATuple[2]  # 'third'
-ATuple[-1]  # 'third'
-
-# the class name is as specified in creating the original factory
-ATuple.__class__.__name__  # 'ATuple'
 ```
+from immutable import Immutable
 
-### `ImmutableFactory`
+# This results in an unordered object.
+imm = Immutable(zero=0, one=1, two=2, three=3)
 
-#### Replicate `namedtuple` functionality
+# This results in an ordered object.
+imm = Immutable(('zero', 0), ('one', 1), ('two', 2), ('three', 3))
 
-The ImmutableFactory is just a thin wrapper that allows you to do this in one
-step:
+# You can access like a Sequence with indices.
+two = imm[2]
 
-```python
-from immutable import ImmutableFactory
+# You can also access via the '.' operator.
+three = imm.three
 
-attributes = (('using', 'first'), ('these', 'second'), ('attrs', 'third'))
+# Iterating works as you'd expect.
+for value in imm.values():
+    print value
 
-# don't worry about the extra kwargs for now :)
-ATuple = ImmutableFactory.create(attributes, keys=False, values=False, items=False)
-ATuple  # Immutable(using='first', these='second', attrs='third')
+# Trying to set an attribute via the '.' operator will fail.
+imm.two = 3  # ImmutableError
 
-# dot-access attributes
-ATuple.using  # 'first'
-Atuple.these  # 'second'
-ATuple.attrs  # 'third'
+# Trying to set an attribute via the `[]` operator will fail.
+imm[2] = 3  # ImmutableError
 
-# index-access attributes
-ATuple[0]  # 'first'
-ATuple[1]  # 'second'
-ATuple[2]  # 'third'
-ATuple[-1]  # 'third'
+# Instantiating with a mutable will fail (which is desirable).
+imm = Immutable(mutable=[1, 2, 3])  # Immutable Error
 
-# the class name is *always* `Immutable` now
-ATuple.__class__.__name__  # 'Immutable'
-```
-
-#### Some extra bells and whistles (don't get too excited)
-
-Most of the time, we don't care about the *order*. This allows us to
-instantiate in a *much* cleaner style:
-
-```python
-from immutable import ImmutableFactory
-
-ATuple = ImmutableFactory.create(using='first', these='second', attrs='third',
-                                 keys=False, values=False, items=False)
-
-# note that there's no predictable order here
-ATuple  # Immutable(these='second', using='first', attrs='third')
-
-# dot-access attributes
-ATuple.using  # 'first'
-Atuple.these  # 'second'
-ATuple.attrs  # 'third'
-
-# doesn't really make sense to index-access attributes now, so don't.
-
-# the class name is *always* `Immutable` now
-ATuple.__class__.__name__  # 'Immutable'
-```
-
-Additionally, it's helpful to have dict-like `keys`, `values`, and `items`.
-These 
-
-### Notes
-
-Note if you use a *mutable* as a value for an attribute of an `Immutable`
-object, you'll be able to change it. If this wasn't the case, the
-`ImmutableFactory` would need to mutate your input data--not nice.
-
-```python
-from immutable import ImmutableFactory
-
-ATuple = ImmutableFactory.create(mutable=['a', 'list'])
-ATuple.mutable  # ['a', 'list']
-ATuple.mutable.append('can change!')
-ATuple.mutable  # ['a', 'list', 'can change!']
+# You can nest Immutable objects too (which gets around using dicts).
+imm = Immutable(
+    key = 'something',
+    sub_imm = Immutable(
+        sub_key = (1, 2, 3)
+    )
+)
 ```
