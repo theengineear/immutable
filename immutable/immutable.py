@@ -116,15 +116,15 @@ class Immutable(object):
         return hash(tuple(self._ordered_dict.items()))
 
     def __str__(self):
-        return '{}'.format(self.__repr__())
+        return bytes('{}'.format(self.__repr__()))
 
     def __unicode__(self):
-        return u'{}'.format(self.__repr__())
+        return '{}'.format(self.__repr__())
 
     def __repr__(self):
-        keys_repr = u', '.join(u'{}={}'.format(key, repr(val))
-                               for key, val in self.items())
-        return u'Immutable({})'.format(keys_repr)
+        keys_repr = ', '.join('{}={}'.format(key, repr(val))
+                              for key, val in self.items())
+        return 'Immutable({})'.format(keys_repr)
 
     def __dir__(self):
         return list(self.keys())
